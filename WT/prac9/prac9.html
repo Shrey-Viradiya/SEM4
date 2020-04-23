@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html >
+<head>
+	<title>Angular Practical 9</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
+	<link href="https://fonts.googleapis.com/css2?family=Lato:wght@900&family=Ubuntu&display=swap" rel="stylesheet">
+	<style>
+		
+		body
+		{
+			background: url(bg.png);
+			background-position: center;
+			background-size: auto;
+			font-family: 'Ubuntu';
+			color: whitesmoke;
+		}
+	
+		#box{
+			border: 1px solid black;
+			color: aliceblue;
+            width: 25%;
+            height: 30px;
+            display: block;
+            text-align:center;
+            background-color:cadetblue;
+		}
+		
+		h2
+		{
+			font-family: 'Lato';
+			color:crimson;
+		}
+	
+	</style>
+</head>
+<body ng-app="myNgApp">
+	
+	<h2>Using Expression!</h2>
+	<hr>
+	
+    <div ng-app ng-init=" DOB='13/06/2000'; Age= 20; semester = 4; gender='male';  person = { firstName:'Shrey', lastName :'Viradiya'}">
+		
+         {{"Name :" + person.firstName + " " + person.lastName}}<br>
+		{{"Age :" + Age}}<br>
+		{{"Date Of Birth :" + DOB}}<br>
+		{{"Gender :" + Gender}}<br>
+		{{"Semester :" + semester}}
+		
+    </div>
+	
+	<h2>Using Directives! (ng-model)</h2>
+	<hr>
+	
+	<div ng-app >
+		Enter Name : 
+		<input type="text" ng-model="name2" /><br><br>
+		
+		Enter Age :
+		<input type="text" ng-model="Age2" /><br><br>
+		Enter Gender :
+		<input type="text" ng-model="Gender2" /><br><br>
+		Enter Date of Birth :
+		<input type="text" ng-model="DOB2" /><br><br>
+		
+		
+		<div ng-app>
+			Name : {{name2}}<br>
+			Age : {{Age2}}<br>
+			Gender : {{Gender2}}<br>
+			Date of Birth : {{DOB2}}<br>
+		</div>
+		
+	</div>
+	
+	
+	<h2>Using Directives (ng-bind)!</h2>
+	<hr>
+	
+	<div ng-app >
+		Enter Name : 
+		<input type="text" ng-model="name3" /><br><br>
+		
+		Enter Age :
+		<input type="text" ng-model="Age3" /><br><br>
+		Enter Gender :
+		<input type="text" ng-model="Gender3" /><br><br>
+		Enter Date of Birth :
+		<input type="text" ng-model="DOB3" /><br><br>
+		
+		
+		<div ng-app>
+			Name : <span ng-bind="name3"></span><br>
+			Age : <span ng-bind="Age3"></span><br>
+			Gender : <span ng-bind="Gender3"></span><br>
+			Date of Birth : <span ng-bind="DOB3"></span><br>
+		</div>
+		
+	</div>
+	
+	
+	<h2>Using Directives (ng-repeat)</h2>
+	<hr>
+	<p>MY HOBBIES!</p>
+	<div  ng-app="" ng-init="hobbies=['Music','Singing','Dancing']">
+		<ol>
+			<li id="box" ng-repeat="hobby in hobbies">
+				{{hobby}}
+			</li>
+		</ol>
+		
+	</div>
+	
+	<h2>Using Directives (ng-if , ng-readonly , ng-disabled)</h2>
+	<hr>
+	
+	<div ng-app ng-init="checked=true" >
+		
+		Click Me: <input type="checkbox" ng-model="checked" /> <br />
+		
+		<div>
+			New: <input ng-if="checked" type="text" /><br>
+		</div>
+		<br>
+		<div>
+			Read-only: <input ng-readonly="checked" type="text" value="This is read-only." /><br>
+		</div>
+		<br>
+		<div>
+			Disabled: <input ng-disabled="checked" type="text" value="This is disabled." /><br>
+		</div>
+		<br>
+		
+	</div>
+	
+	<h2>Using Controllers!</h2>
+	<hr>
+		
+	<h2>Student Information:</h2>
+	<div ng-controller="myController">
+		First Name: {{student.firstName}} <br />
+		Last Name: {{student.lastName}}<br />
+		Age : {{age4}}<br />
+		Gender : {{gender4}}<br />
+		Semester : {{semester4}}<br />
+	</div>
+
+	
+	<script>
+			 var ngApp = angular.module('myNgApp', []);
+
+			ngApp.controller('myController', function ($scope) {
+				$scope.student = { firstName: 'Shrey', lastName: 'Viradiya' };
+				$scope.age4=20;
+				$scope.gender4="Male";
+				$scope.semester4=4;
+			});
+	</script>
+</body>
+</html>

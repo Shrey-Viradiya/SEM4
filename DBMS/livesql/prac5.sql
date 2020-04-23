@@ -1,3 +1,9 @@
+-- Practical 5
+-- Shrey Viradiya
+-- 18BCE259
+
+-- This Code is executed on https://livesql.oracle.com
+
 -- Write a query to find the salary of employees whose salary is greater than the salary of
 -- employee whose id is 100.
 SELECT employee_id, salary FROM employees

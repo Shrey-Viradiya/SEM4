@@ -1,0 +1,20 @@
+         PROCESS 2        
+Resource Allocated to process 2
+now Available resource 1 is :3
+now Available resource 2 is :0
+Total Allocated resource 1 is :3
+Total Allocated resource 2 is :4
+Process 2 complete, Resources given back to available
+Now Available resource 1 is :6
+Now Available resource 2 is :4
+
+ALL PROCESSES COMPLETED
+         PROCESS 1
+Resource Allocated to process 1
+now Available resource 1 is :0
+now Available resource 2 is :1
+Total Allocated resource 1 is :3
+Total Allocated resource 2 is :1
+Process 1 complete, Resources given back to available
+Now Available resource 1 is :3
+Now Available resource 2 is :2

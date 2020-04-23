@@ -1,3 +1,9 @@
+-- Practical 6
+-- Shrey Viradiya
+-- 18BCE259
+
+-- This Code is executed on https://livesql.oracle.com
+
 CREATE TABLE client (
   clientno          VARCHAR2(6),
   name              VARCHAR2(20),
@@ -226,7 +232,6 @@ WHERE salesmanno='S01';
 -- ROLLBACK;
 -- ROLLBACK;
 
-
 -- 5
 -- Delete data of order ‘O19001’ from sales_order table and observe the error. Rewrite the
 -- query for alteration of table, so that if you remove ‘O19001’ from sales_order, corresponding
@@ -241,10 +246,6 @@ ALTER TABLE sales_order_details ADD (
 );
 DELETE FROM sales_order
 WHERE orderno='O19001';
--- ROLLBACK;
--- ROLLBACK;
--- ROLLBACK;
-
 
 -- 6
 -- Drop primary key constraint on ‘orderno’ from sales_order table. Observe the error. Write
@@ -257,4 +258,3 @@ SELECT * FROM ALL_CONSTRAINTS
 WHERE constraint_type='R' AND table_name IN (UPPER('sales_order'), UPPER('client'), UPPER('product'), UPPER('sales_order_details'), UPPER('salesman'));
 -- SOLUTION:
 ALTER TABLE sales_order DROP CONSTRAINT sales_order_pk CASCADE;
--- ROLLBACK;

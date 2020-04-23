@@ -1,0 +1,385 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+psql (12.1)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# \d
+Did not find any relations.
+postgres=# \l
+                                         List of databases
+   Name    |  Owner   | Encoding |      Collate       |       Ctype        |   Access privileges
+-----------+----------+----------+--------------------+--------------------+-----------------------
+ agricom   | postgres | UTF8     | English_India.1252 | English_India.1252 |
+ mydb      | postgres | UTF8     | English_India.1252 | English_India.1252 | =Tc/postgres         +
+           |          |          |                    |                    | postgres=CTc/postgres+
+           |          |          |                    |                    | f=CTc/postgres
+ postgres  | postgres | UTF8     | English_India.1252 | English_India.1252 |
+ template0 | postgres | UTF8     | English_India.1252 | English_India.1252 | =c/postgres          +
+           |          |          |                    |                    | postgres=CTc/postgres
+ template1 | postgres | UTF8     | English_India.1252 | English_India.1252 | =c/postgres          +
+           |          |          |                    |                    | postgres=CTc/postgres
+(5 rows)
+
+
+postgres=# \c mydb
+You are now connected to database "mydb" as user "postgres".
+mydb=# \d
+         List of relations
+ Schema |  Name  | Type  |  Owner
+--------+--------+-------+----------
+ public | books  | table | postgres
+ public | member | table | postgres
+(2 rows)
+
+
+mydb=# create table issue(
+mydb(# lib_issue_id int primary key,
+mydb(# book_no int references books(book_no_,
+mydb(# book_no int references books(book_no_,
+mydb(# ;
+mydb(# )
+mydb(# );
+mydb(# );;
+ERROR:  syntax error at or near "int"
+LINE 4: book_no int references books(book_no_,
+                ^
+mydb=# create table issue(
+mydb(# lib_issue_id int primary key,
+mydb(# book_no int references books(book_no),
+mydb(# mem_id int references member(mem_id),
+mydb(# issue_date date default current_date,
+mydb(# return_date date default current_date + interval '14 day');
+ERROR:  column "book_no" referenced in foreign key constraint does not exist
+mydb=# desc books;
+ERROR:  syntax error at or near "desc"
+LINE 1: desc books;
+        ^
+mydb=# describe books;
+ERROR:  syntax error at or near "describe"
+LINE 1: describe books;
+        ^
+mydb=# \d books
+                         Table "public.books"
+   Column    |         Type          | Collation | Nullable | Default
+-------------+-----------------------+-----------+----------+---------
+ book_bo     | integer               |           | not null |
+ book_name   | character varying(60) |           |          |
+ author_name | character varying(30) |           |          |
+ cost        | integer               |           |          |
+ category    | character varying(15) |           |          |
+Indexes:
+    "books_pkey" PRIMARY KEY, btree (book_bo)
+
+
+mydb=# alter table books rename column book_bo to book_no;
+ALTER TABLE
+mydb=# \d books
+                         Table "public.books"
+   Column    |         Type          | Collation | Nullable | Default
+-------------+-----------------------+-----------+----------+---------
+ book_no     | integer               |           | not null |
+ book_name   | character varying(60) |           |          |
+ author_name | character varying(30) |           |          |
+ cost        | integer               |           |          |
+ category    | character varying(15) |           |          |
+Indexes:
+    "books_pkey" PRIMARY KEY, btree (book_no)
+
+
+mydb=# create table issue(
+mydb(# lib_issue_id int primary key,
+mydb(# book_no int references books(book_no),
+mydb(# mem_id int references member(mem_id),
+mydb(# issue_date date default current_date,
+mydb(# return_date date default current_date + interval '14 day');
+CREATE TABLE
+mydb=# \d
+         List of relations
+ Schema |  Name  | Type  |  Owner
+--------+--------+-------+----------
+ public | books  | table | postgres
+ public | issue  | table | postgres
+ public | member | table | postgres
+(3 rows)
+
+
+mydb=# create view view1 as select lib_issue_id, bo.book_name, mem.mem_name, bo.author_name, iss.issue_date from member mem, books bo, issue iss where iss.book_no = bo.book_no and iss.mem_id = mem.mem_id and cost between 500 nd 750 and category in ('Database','RDBMS') with read only;
+ERROR:  syntax error at or near "nd"
+LINE 1: ... and iss.mem_id = mem.mem_id and cost between 500 nd 750 and...
+                                                             ^
+mydb=# create view view1 as select lib_issue_id, bo.book_name, mem.mem_name, bo.author_name, iss.issue_date from member mem, books bo, issue iss where iss.book_no = bo.book_no and iss.mem_id = mem.mem_id and cost between 500 and 750 and category in ('Database','RDBMS') with read only;
+ERROR:  syntax error at or near "read"
+LINE 1: ...and 750 and category in ('Database','RDBMS') with read only;
+                                                             ^
+mydb=#
+
+
+
+
+
+
+
+
+
+
+       create view view1 with (read only) as select lib_issue_id, bo.book_name, mem.mem_name, bo.author_name, iss.issue_date from member mem, books bo, issue iss where iss.book_no = bo.book_no and iss.mem_id = mem.mem_id and cost between 500 and 750 and category in ('Database','RDBMS');
+ERROR:  syntax error at or near "only"
+LINE 1: create view view1 with (read only) as select lib_issue_id, b...
+                                     ^
+mydb=# create view view1 as select lib_issue_id, bo.book_name, mem.mem_name, bo.author_name, iss.issue_date from member mem, books bo, issue iss where iss.book_no = bo.book_no and iss.mem_id = mem.mem_id and cost between 500 and 750 and category in ('Database','RDBMS');
+CREATE VIEW
+mydb=# create view view2 as select * from books where cost > 500 with check option;
+CREATE VIEW
+mydb=# insert into view2 values(1,'book_name1','author_name1','300','category1');
+ERROR:  new row violates check option for view "view2"
+DETAIL:  Failing row contains (1, book_name1, author_name1, 300, category1).
+mydb=# insert into view2 values(1,'3 Mistakes of My life','Chetan Bhagat',9000,'Moral);
+mydb'# select * from books;
+mydb'# select * from views;
+mydb'#
+mydb'# ;
+mydb'# ;
+mydb'# commitl
+mydb'# commit;
+mydb'# q
+mydb'# ;
+mydb'# ;
+mydb'# ;
+mydb'# ;
+mydb'# ;
+mydb'# ;;;
+mydb'# ;
+mydb'# ;
+mydb'# ;
+mydb'# ;'
+mydb(# )
+mydb-# select * from books;
+ERROR:  syntax error at or near "select"
+LINE 21: select * from books;
+         ^
+mydb=# ;
+mydb=# select * from books;
+ book_no | book_name | author_name | cost | category
+---------+-----------+-------------+------+----------
+(0 rows)
+
+
+mydb=# insert into view2 values(1,'3 Mistakes of My life','Chetan Bhagat',9000,'Moral');
+INSERT 0 1
+mydb=# select * from books;
+ book_no |       book_name       |  author_name  | cost | category
+---------+-----------------------+---------------+------+----------
+       1 | 3 Mistakes of My life | Chetan Bhagat | 9000 | Moral
+(1 row)
+
+
+mydb=# select * from view2;\
+ book_no |       book_name       |  author_name  | cost | category
+---------+-----------------------+---------------+------+----------
+       1 | 3 Mistakes of My life | Chetan Bhagat | 9000 | Moral
+(1 row)
+
+
+invalid command \
+Try \? for help.
+mydb=# create view view4 as select author_name, count(book_no) as total from books group by author_name;
+CREATE VIEW
+mydb=# select * from view4;
+  author_name  | total
+---------------+-------
+ Chetan Bhagat |     1
+(1 row)
+
+
+mydb=# create user s with encrypted password 'passwords'
+mydb-# ;
+CREATE ROLE
+mydb=# create user n with encrypted password 'passwordn';
+CREATE ROLE
+mydb=# create user t with encrypted password 'passwordt';
+CREATE ROLE
+mydb=# create user w with encrypted password 'passwordw';
+CREATE ROLE
+mydb=# create user p with encrypted password 'passwordp';
+CREATE ROLE
+mydb=# create user j with encrypted password 'passwordj';
+CREATE ROLE
+mydb=# create user b with encrypted password 'passwordb';
+CREATE ROLE
+mydb=# create user k with encrypted password 'passwordk';
+CREATE ROLE
+mydb=# select *  from users;
+ERROR:  relation "users" does not exist
+LINE 1: select *  from users;
+                       ^
+mydb=# select *  from user;
+   user
+----------
+ postgres
+(1 row)
+
+
+mydb=# select *  from student;;
+ERROR:  relation "student" does not exist
+LINE 1: select *  from student;
+                       ^
+mydb=# select *  from student;
+ERROR:  relation "student" does not exist
+LINE 1: select *  from student;
+                       ^
+mydb=# commit;
+WARNING:  there is no transaction in progress
+COMMIT
+mydb=# select *  from user;
+   user
+----------
+ postgres
+(1 row)
+
+
+mydb=# select *  from role;
+ERROR:  relation "role" does not exist
+LINE 1: select *  from role;
+                       ^
+mydb=# select *  from roles;
+ERROR:  relation "roles" does not exist
+LINE 1: select *  from roles;
+                       ^
+mydb=# \l
+                                         List of databases
+   Name    |  Owner   | Encoding |      Collate       |       Ctype        |   Access privileges
+-----------+----------+----------+--------------------+--------------------+-----------------------
+ agricom   | postgres | UTF8     | English_India.1252 | English_India.1252 |
+ mydb      | postgres | UTF8     | English_India.1252 | English_India.1252 | =Tc/postgres         +
+           |          |          |                    |                    | postgres=CTc/postgres+
+           |          |          |                    |                    | f=CTc/postgres
+ postgres  | postgres | UTF8     | English_India.1252 | English_India.1252 |
+ template0 | postgres | UTF8     | English_India.1252 | English_India.1252 | =c/postgres          +
+           |          |          |                    |                    | postgres=CTc/postgres
+ template1 | postgres | UTF8     | English_India.1252 | English_India.1252 | =c/postgres          +
+           |          |          |                    |                    | postgres=CTc/postgres
+(5 rows)
+
+
+mydb=# \d
+         List of relations
+ Schema |  Name  | Type  |  Owner
+--------+--------+-------+----------
+ public | books  | table | postgres
+ public | issue  | table | postgres
+ public | member | table | postgres
+ public | view1  | view  | postgres
+ public | view2  | view  | postgres
+ public | view4  | view  | postgres
+(6 rows)
+
+
+mydb=# select * from u;
+ERROR:  relation "u" does not exist
+LINE 1: select * from u;
+                      ^
+mydb=# \du
+                                   List of roles
+ Role name |                         Attributes                         | Member of
+-----------+------------------------------------------------------------+-----------
+ b         |                                                            | {}
+ f         |                                                            | {}
+ j         |                                                            | {}
+ k         |                                                            | {}
+ n         |                                                            | {}
+ p         |                                                            | {}
+ postgres  | Superuser, Create role, Create DB, Replication, Bypass RLS | {}
+ s         |                                                            | {}
+ t         |                                                            | {}
+ w         |                                                            | {}
+
+
+mydb=# select * from pg_catalog.pg_user
+mydb-# ;
+ usename  | usesysid | usecreatedb | usesuper | userepl | usebypassrls |  passwd  | valuntil | useconfig
+----------+----------+-------------+----------+---------+--------------+----------+----------+-----------
+ postgres |       10 | t           | t        | t       | t            | ******** |          |
+ f        |    20124 | f           | f        | f       | f            | ******** |          |
+ s        |    20172 | f           | f        | f       | f            | ******** |          |
+ n        |    20173 | f           | f        | f       | f            | ******** |          |
+ t        |    20174 | f           | f        | f       | f            | ******** |          |
+ w        |    20175 | f           | f        | f       | f            | ******** |          |
+ p        |    20176 | f           | f        | f       | f            | ******** |          |
+ j        |    20177 | f           | f        | f       | f            | ******** |          |
+ b        |    20178 | f           | f        | f       | f            | ******** |          |
+ k        |    20179 | f           | f        | f       | f            | ******** |          |
+(10 rows)
+
+
+mydb=# grant all on student f;
+ERROR:  syntax error at or near "f"
+LINE 1: grant all on student f;
+                             ^
+mydb=# grant all on books to f;
+GRANT
+mydb=# grant insert,delete on books to s;
+GRANT
+mydb=# create view view5 as select * from member where mem_id = user;
+ERROR:  operator does not exist: integer = name
+LINE 1: ...eate view view5 as select * from member where mem_id = user;
+                                                                ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+mydb=# create view view5 as select * from member where mem_id = user.usesysid;
+ERROR:  syntax error at or near "."
+LINE 1: ... view5 as select * from member where mem_id = user.usesysid;
+                                                             ^
+mydb=# create view view5 as select * from member where mem_name = user;
+CREATE VIEW
+mydb=# grant select on stud to f,s,n,t,w,p,j,b,k;
+ERROR:  relation "stud" does not exist
+mydb=# grant select on view5 to f,s,n,t,w,p,j,b,k;
+GRANT
+mydb=# create view for_t as select mem_name,mem_id,penalty from member;
+CREATE VIEW
+mydb=# grant select on for_t to t;
+GRANT
+mydb=# grant select on for_t to w;
+GRANT
+mydb=# grant update on for_n to w;
+ERROR:  relation "for_n" does not exist
+mydb=# grant update on for_t to w;
+GRANT
+mydb=# create view for_p as select * from book where category in ('adventure','action');
+ERROR:  relation "book" does not exist
+LINE 1: create view for_p as select * from book where category in ('...
+                                           ^
+mydb=# create view for_p as select * from books where category in ('adventure','action');
+CREATE VIEW
+mydb=# grant all on for_p to p;
+GRANT
+mydb=# create view for_j as select * from books where category = 'action';
+CREATE VIEW
+mydb=# grant delete on for_j to j;
+GRANT
+mydb=# create view for_b as select * fromm book where author_name = (select author_name from books group by author_name having count(author_name) < 5);
+ERROR:  syntax error at or near "fromm"
+LINE 1: create view for_b as select * fromm book where author_name =...
+                                      ^
+mydb=# create view for_b as select * from book where author_name = (select author_name from books group by author_name having count(author_name) < 5);
+ERROR:  relation "book" does not exist
+LINE 1: create view for_b as select * from book where author_name = ...
+                                           ^
+mydb=# create view for_b as select * from books where author_name = (select author_name from books group by author_name having count(author_name) < 5);
+CREATE VIEW
+mydb=# grant update,delete on for_b to b;
+GRANT
+mydb=# create view for_k as select * from issues where issue_date = (select min(issue_date) from issues) or issue_date = (select max(issue_date) from issues);
+ERROR:  relation "issues" does not exist
+LINE 1: create view for_k as select * from issues where issue_date =...
+                                           ^
+mydb=# create view for_k as select * from issue where issue_date = (select min(issue_date) from issue) or issue_date = (select max(issue_date) from issue);
+CREATE VIEW
+mydb=# grant select on for_k to k;
+GRANT
+mydb=#
